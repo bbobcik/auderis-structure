@@ -1,0 +1,11 @@
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+artifacts {
+	archives jar
+	archives javadocJar
+	archives sourcesJar
+	archives testSupportJar
+	archives testSupportSourceJar
+	archives testSupportJavadocJar
+}
