@@ -28,7 +28,12 @@ repositories {
 
 dependencies {
 	testSupportCompileOnly 'org.hamcrest:hamcrest-core:1.3'
-	testCompile 'org.hamcrest:hamcrest-all:1.3'
+
+    testCompile 'org.junit.jupiter:junit-jupiter-api:5.1.0'
+    testCompile 'org.junit.jupiter:junit-jupiter-params:5.1.0'
+    testCompile 'org.hamcrest:hamcrest-all:1.3'
+
+    testRuntime 'org.junit.jupiter:junit-jupiter-engine:5.1.0'
 }
 
 task javadocJar(type: Jar, dependsOn: javadoc) {
