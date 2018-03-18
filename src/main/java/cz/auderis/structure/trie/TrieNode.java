@@ -8,11 +8,13 @@ public interface TrieNode<E> {
 
     int getDepth();
     boolean isRoot();
-    TrieNode<E> getParent();
+    <N extends TrieNode<E>> N getParent();
 
     boolean isLeaf();
     TrieChildren<E> getChildren();
 
     List<E> getValueChain();
+
+    boolean hasAncestorReference(TrieNode<E> ancestorNode);
 
 }
