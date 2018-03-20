@@ -1,5 +1,7 @@
 package cz.auderis.structure.trie;
 
+import cz.auderis.structure.children.NodeChildren;
+
 import java.util.List;
 
 public interface TrieNode<E> {
@@ -11,7 +13,7 @@ public interface TrieNode<E> {
     <N extends TrieNode<E>> N getParent();
 
     boolean isLeaf();
-    TrieChildren<E> getChildren();
+    <N extends TrieNode<E>> NodeChildren<E, N> getChildren();
 
     List<E> getValueChain();
 

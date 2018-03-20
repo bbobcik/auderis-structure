@@ -1,5 +1,9 @@
 package cz.auderis.structure.trie;
 
+import cz.auderis.structure.children.BasicNodeChildren;
+import cz.auderis.structure.children.EmptyNodeChildren;
+import cz.auderis.structure.children.NodeChildren;
+
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -7,7 +11,7 @@ class BasicTrieNode<E, P> extends AbstractExtendedTrieNode<E, P> {
 
     final E value;
     final BasicTrieNode<E, P> parentNode;
-    private BasicTrieChildren<E, P> children;
+    private NodeChildren<E, BasicTrieNode<E, P>> children;
 
     BasicTrieNode(E value, BasicTrieNode<E, P> parentNode) {
         super(parentNode);
@@ -26,29 +30,22 @@ class BasicTrieNode<E, P> extends AbstractExtendedTrieNode<E, P> {
     }
 
     @Override
-    public TrieChildren<E> getChildren() {
+    public NodeChildren<E, BasicTrieNode<E, P>> getChildren() {
         if (null == children) {
-            return (TrieChildren<E>) EmptyTrieChildren.INSTANCE;
+            return EmptyNodeChildren.getInstance();
         }
         return children;
     }
 
-    BasicTrieChildren<E, P> getChildrenInternal() {
+    NodeChildren<E, BasicTrieNode<E, P>> getChildrenInternal() {
         return children;
     }
 
     BasicTrieNode<E, P> findOrCreateChild(E value, Supplier<Map<E, BasicTrieNode<E, P>>> childStorageSupplier) {
-        BasicTrieNode<E, P> result;
         if (null == children) {
-            children = new BasicTrieChildren<>(childStorageSupplier);
-            result = null;
-        } else {
-            result = children.getChild(value);
+            children = new BasicNodeChildren<>();
         }
-        if (null == result) {
-            result = new BasicTrieNode<>(value, this);
-            children.addChild(result);
-        }
+        final BasicTrieNode<E, P> result = children.getOrAddChild(value, key -> new BasicTrieNode<>(key, this));
         return result;
     }
 
@@ -57,7 +54,7 @@ class BasicTrieNode<E, P> extends AbstractExtendedTrieNode<E, P> {
         if (null == children) {
             result = null;
         } else {
-            result = children.getChild(value);
+            result = children.getChild(value).orElse(null);
         }
         return result;
     }

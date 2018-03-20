@@ -1,5 +1,6 @@
 package cz.auderis.structure.trie;
 
+import cz.auderis.structure.children.NodeChildren;
 import cz.auderis.structure.traversal.NodeVisitorContext;
 
 import java.util.List;
@@ -53,7 +54,7 @@ public abstract class AbstractExtendedTrieNode<E, P> implements ExtendedTrieNode
 
     @Override
     public final boolean isLeaf() {
-        final TrieChildren<E> children = getChildren();
+        final NodeChildren<E, TrieNode<E>> children = getChildren();
         return (null == children) || children.isEmpty();
     }
 

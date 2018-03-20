@@ -1,5 +1,6 @@
 package cz.auderis.structure.trie;
 
+import cz.auderis.structure.children.NodeChildren;
 import cz.auderis.structure.traversal.BasicVisitorContext;
 import cz.auderis.structure.traversal.NodeVisitor;
 import cz.auderis.structure.traversal.TraversalStrategy;
@@ -26,7 +27,7 @@ public class BasicTrie<E, P> implements ExtendedTrie<E, P> {
     }
 
     public static <E1 extends Comparable, P1> BasicTrie<E1, P1> newSortedInstance() {
-        return new BasicTrie<>(() -> new TreeMap<E1, BasicTrieNode<E1, P1>>());
+        return new BasicTrie<>(TreeMap::new);
     }
 
     public static <E1 extends Comparable, P1> BasicTrie<E1, P1> newSortedInstance(Comparator<E1> comparator) {
@@ -51,7 +52,7 @@ public class BasicTrie<E, P> implements ExtendedTrie<E, P> {
     @Override
     public void clear() {
         visit(TraversalStrategy.DEPTH_FIRST_SEARCH_BOTTOM_UP, AbstractExtendedTrieNode::resetExtendedNode);
-        final BasicTrieChildren<E, P> rootChildren = root.getChildrenInternal();
+        final NodeChildren<E, BasicTrieNode<E, P>> rootChildren = root.getChildrenInternal();
         if (null != rootChildren) {
             rootChildren.clear();
         }
@@ -194,7 +195,7 @@ public class BasicTrie<E, P> implements ExtendedTrie<E, P> {
                 if (context.isPruning()) {
                     context.resetPruning();
                 } else {
-                    final BasicTrieChildren<E, P> children = node.getChildrenInternal();
+                    final NodeChildren<E, BasicTrieNode<E, P>> children = node.getChildrenInternal();
                     if (null != children) {
                         children.addToCollection(nodeDeque);
                     }
@@ -205,7 +206,7 @@ public class BasicTrie<E, P> implements ExtendedTrie<E, P> {
             nodeDeque.add(root);
             while (!nodeDeque.isEmpty() && !context.isTerminated()) {
                 final BasicTrieNode<E, P> node = nodeDeque.peekLast();
-                final BasicTrieChildren<E, P> children = node.getChildrenInternal();
+                final NodeChildren<E, BasicTrieNode<E, P>> children = node.getChildrenInternal();
                 if ((node.depth >= lastDepth) && (null != children) && !children.isEmpty()) {
                     children.addToCollection(nodeDeque);
                 } else {

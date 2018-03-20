@@ -1,10 +1,14 @@
 package cz.auderis.structure.trie;
 
+import cz.auderis.structure.children.ComparableNodeChildren;
+import cz.auderis.structure.children.EmptyNodeChildren;
+import cz.auderis.structure.children.NodeChildren;
+
 public class IntTrieNode<P> extends AbstractExtendedTrieNode<Integer, P> {
 
     final int value;
     final IntTrieNode<P> parent;
-    private IntTrieChildren<P> children;
+    private NodeChildren<Integer, IntTrieNode<P>> children;
 
     IntTrieNode(int value, IntTrieNode<P> parent) {
         super(parent);
@@ -28,29 +32,22 @@ public class IntTrieNode<P> extends AbstractExtendedTrieNode<Integer, P> {
     }
 
     @Override
-    public TrieChildren<Integer> getChildren() {
+    public NodeChildren<Integer, IntTrieNode<P>> getChildren() {
         if (null == children) {
-            return (TrieChildren<Integer>) ((TrieChildren) EmptyTrieChildren.INSTANCE);
+            return EmptyNodeChildren.getInstance();
         }
         return children;
     }
 
-    IntTrieChildren<P> getChildrenInternal() {
+    NodeChildren<Integer, IntTrieNode<P>> getChildrenInternal() {
         return children;
     }
 
     IntTrieNode<P> findOrCreateChild(int value) {
-        IntTrieNode<P> result;
         if (null == children) {
-            children = new IntTrieChildren<>();
-            result = null;
-        } else {
-            result = children.getChild(value);
+            children = new ComparableNodeChildren<>();
         }
-        if (null == result) {
-            result = new IntTrieNode<>(value, this);
-            children.addChild(result);
-        }
+        final IntTrieNode<P> result = children.getOrAddChild(value, key -> new IntTrieNode<>(key, this));
         return result;
     }
 
@@ -59,10 +56,9 @@ public class IntTrieNode<P> extends AbstractExtendedTrieNode<Integer, P> {
         if (null == children) {
             result = null;
         } else {
-            result = children.getChild(value);
+            result = children.getChild(value).orElse(null);
         }
         return result;
     }
-
 
 }

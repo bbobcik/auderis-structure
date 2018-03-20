@@ -1,5 +1,6 @@
 package cz.auderis.structure.trie;
 
+import cz.auderis.structure.children.NodeChildren;
 import cz.auderis.structure.traversal.BasicVisitorContext;
 import cz.auderis.structure.traversal.NodeVisitor;
 import cz.auderis.structure.traversal.TraversalStrategy;
@@ -32,7 +33,7 @@ public class IntTrie<P> implements ExtendedTrie<Integer, P> {
     @Override
     public void clear() {
         visit(TraversalStrategy.DEPTH_FIRST_SEARCH_BOTTOM_UP, AbstractExtendedTrieNode::resetExtendedNode);
-        final IntTrieChildren<P> rootChildren = root.getChildrenInternal();
+        final NodeChildren<Integer, IntTrieNode<P>> rootChildren = root.getChildrenInternal();
         if (null != rootChildren) {
             rootChildren.clear();
         }
@@ -249,7 +250,7 @@ public class IntTrie<P> implements ExtendedTrie<Integer, P> {
                 if (context.isPruning()) {
                     context.resetPruning();
                 } else {
-                    final IntTrieChildren<P> children = node.getChildrenInternal();
+                    final NodeChildren<Integer, IntTrieNode<P>> children = node.getChildrenInternal();
                     if (null != children) {
                         children.addToCollection(nodeDeque);
                     }
@@ -260,7 +261,7 @@ public class IntTrie<P> implements ExtendedTrie<Integer, P> {
             nodeDeque.add(root);
             while (!nodeDeque.isEmpty() && !context.isTerminated()) {
                 final IntTrieNode<P> node = nodeDeque.peekLast();
-                final IntTrieChildren<P> children = node.getChildrenInternal();
+                final NodeChildren<Integer, IntTrieNode<P>> children = node.getChildrenInternal();
                 if ((node.depth >= lastDepth) && (null != children) && !children.isEmpty()) {
                     children.addToCollection(nodeDeque);
                 } else {
